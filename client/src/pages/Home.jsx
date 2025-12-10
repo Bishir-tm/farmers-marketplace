@@ -59,18 +59,18 @@ const Home = () => {
             <div className="bg-green-600 text-white p-6 md:p-10 rounded-3xl shadow-xl text-center space-y-4">
                 <h1 className="text-2xl md:text-4xl font-bold">Fresh Farm Produce, Direct to You</h1>
                 <p className="text-base md:text-xl opacity-90">Skip the middleman. Buy fresh.</p>
-                <div className="max-w-xl mx-auto">
+                <div className="max-w-xl mx-auto px-4 sm:px-0">
                     <div className="flex items-stretch bg-white rounded-full p-2 shadow-inner gap-2">
                         <div className="flex items-center flex-1 px-2">
-                            <FaSearch className="text-gray-400 mr-2" />
+                            <FaSearch className="text-gray-400 mr-2 flex-shrink-0" />
                             <input 
                                 type="text" 
                                 placeholder="Search for yams, rice, tomatoes..." 
-                                className="flex-1 p-2 outline-none text-gray-700 bg-transparent"
+                                className="flex-1 p-2 outline-none text-gray-700 bg-transparent text-sm md:text-base"
                                 onChange={(e) => setKeyword(e.target.value)}
                             />
                         </div>
-                        <button className="bg-green-700 text-white px-6 py-2 rounded-full hover:bg-green-800 transition font-medium whitespace-nowrap">Search</button>
+                        <button className="bg-green-700 text-white px-4 md:px-6 py-2 rounded-full hover:bg-green-800 transition font-medium whitespace-nowrap text-sm md:text-base">Search</button>
                     </div>
                 </div>
             </div>
