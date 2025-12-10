@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import axios from 'axios';
+import api from '../config/api';
 import AuthContext from '../context/AuthContext';
 import { useUI } from '../context/UIContext';
 import { Link, useNavigate } from 'react-router-dom';
@@ -14,17 +14,13 @@ const FarmerDashboard = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const config = {
-                headers: { Authorization: `Bearer ${user.token}` }
-            };
-            
             // Fetch products
-            const { data: productsData } = await axios.get('http://localhost:5000/api/products/my', config);
+            const { data: productsData } = await api.get('/api/products/my');
             setProducts(productsData);
             
             // Fetch analytics
             try {
-                const { data: analyticsData } = await axios.get('http://localhost:5000/api/analytics/farmer', config);
+                const { data: analyticsData } = await api.get('/api/analytics/farmer');
                 setAnalytics(analyticsData);
             } catch (error) {
                 console.error('Failed to load analytics:', error);
@@ -39,10 +35,7 @@ const FarmerDashboard = () => {
             message: 'Are you sure you want to delete this product? This action cannot be undone.',
             onConfirm: async () => {
                 try {
-                    const config = {
-                        headers: { Authorization: `Bearer ${user.token}` }
-                    };
-                    await axios.delete(`http://localhost:5000/api/products/${id}`, config);
+                    await api.delete(`/api/products/${id}`);
                     setProducts(products.filter(p => p._id !== id));
                     showToast('Product deleted successfully', 'success');
                 } catch (error) {

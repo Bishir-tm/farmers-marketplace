@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import axios from 'axios';
+import api from '../config/api';
 import AuthContext from '../context/AuthContext';
 import { useUI } from '../context/UIContext';
 import { FaBox, FaChevronDown, FaChevronUp } from 'react-icons/fa';
@@ -18,13 +18,10 @@ const FarmerOrders = () => {
 
     const fetchOrders = async () => {
         try {
-            const config = {
-                headers: { Authorization: `Bearer ${user.token}` }
-            };
             const url = filter === 'all' 
-                ? 'http://localhost:5000/api/orders/farmer'
-                : `http://localhost:5000/api/orders/farmer?status=${filter}`;
-            const { data } = await axios.get(url, config);
+                ? '/api/orders/farmer'
+                : `/api/orders/farmer?status=${filter}`;
+            const { data } = await api.get(url);
             setOrders(data);
         } catch (error) {
             showToast('Failed to load orders', 'error');
@@ -35,10 +32,7 @@ const FarmerOrders = () => {
 
     const handleStatusUpdate = async (orderId, newStatus) => {
         try {
-            const config = {
-                headers: { Authorization: `Bearer ${user.token}` }
-            };
-            await axios.put(`http://localhost:5000/api/orders/${orderId}/status`, { status: newStatus }, config);
+            await api.put(`/api/orders/${orderId}/status`, { status: newStatus });
             showToast('Order status updated successfully', 'success');
             fetchOrders();
         } catch (error) {

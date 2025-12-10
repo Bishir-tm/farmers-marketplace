@@ -1,11 +1,14 @@
 import { useState, useContext } from 'react';
 import AuthContext from '../context/AuthContext';
 import { useUI } from '../context/UIContext';
-import axios from 'axios';
+import api from '../config/api';
 
 const Profile = () => {
     const { user, setUser } = useContext(AuthContext);
     const { showToast } = useUI();
+    
+    // Debug: log user data
+    console.log('User data in Profile:', user);
     
     const [name, setName] = useState(user?.name || '');
     const [email, setEmail] = useState(user?.email || '');
@@ -18,22 +21,21 @@ const Profile = () => {
         setLoading(true);
 
         try {
-            const config = {
-                headers: { Authorization: `Bearer ${user.token}` }
-            };
-
-            const { data } = await axios.put(
-                'http://localhost:5000/api/auth/profile',
-                { name, email, phoneNumber, location },
-                config
+            console.log('Sending profile update:', { name, email, phoneNumber, location });
+            const { data } = await api.put(
+                '/api/auth/profile',
+                { name, email, phoneNumber, location }
             );
 
+            console.log('Profile update response:', data);
+            
             // Update user in context and localStorage
             setUser(data);
             localStorage.setItem('userInfo', JSON.stringify(data));
             
             showToast('Profile updated successfully!', 'success');
         } catch (error) {
+            console.error('Profile update error:', error.response?.data);
             showToast(error.response?.data?.message || 'Failed to update profile', 'error');
         } finally {
             setLoading(false);

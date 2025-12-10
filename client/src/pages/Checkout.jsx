@@ -3,7 +3,7 @@ import { useCart } from '../context/CartContext';
 import { useNavigate } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
 import { useUI } from '../context/UIContext';
-import axios from 'axios';
+import api from '../config/api';
 
 const Checkout = () => {
     const { cartItems, getCartTotal, clearCart } = useCart();
@@ -32,13 +32,7 @@ const Checkout = () => {
                 notes
             };
 
-            const config = {
-                headers: {
-                    Authorization: `Bearer ${user.token}`
-                }
-            };
-
-            await axios.post('http://localhost:5000/api/orders', orderData, config);
+            await api.post('/api/orders', orderData);
             
             clearCart();
             showToast('Order placed successfully!', 'success');

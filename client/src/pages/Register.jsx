@@ -1,6 +1,7 @@
 import { useState, useContext } from 'react';
 import AuthContext from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { useUI } from '../context/UIContext';
 
 const Register = () => {
     const [name, setName] = useState('');
@@ -10,8 +11,8 @@ const Register = () => {
     const [location, setLocation] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     const { register } = useContext(AuthContext);
+    const { showToast } = useUI();
     const navigate = useNavigate();
-    const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (e) => {
@@ -19,9 +20,10 @@ const Register = () => {
         setLoading(true);
         try {
             await register(name, email, password, role, location, phoneNumber);
+            showToast('Account created successfully! Welcome to FarmConnect.', 'success');
             navigate('/');
         } catch (err) {
-            setError(err.response?.data?.message || 'Registration failed');
+            showToast(err.response?.data?.message || 'Registration failed', 'error');
         } finally {
             setLoading(false);
         }
@@ -30,7 +32,6 @@ const Register = () => {
     return (
         <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-xl shadow-lg border border-gray-100">
             <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">Create Account</h2>
-            {error && <div className="bg-red-100 text-red-700 p-3 rounded mb-4">{error}</div>}
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                     <label className="block text-sm font-medium text-gray-700">Full Name</label>

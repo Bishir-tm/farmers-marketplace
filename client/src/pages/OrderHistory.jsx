@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import axios from 'axios';
+import api from '../config/api';
 import AuthContext from '../context/AuthContext';
 import { useUI } from '../context/UIContext';
 import { FaBox, FaChevronDown, FaChevronUp } from 'react-icons/fa';
@@ -18,10 +18,7 @@ const OrderHistory = () => {
 
     const fetchOrders = async () => {
         try {
-            const config = {
-                headers: { Authorization: `Bearer ${user.token}` }
-            };
-            const { data } = await axios.get('http://localhost:5000/api/orders/my', config);
+            const { data } = await api.get('/api/orders/my');
             setOrders(data);
         } catch (error) {
             showToast('Failed to load orders', 'error');
@@ -36,10 +33,7 @@ const OrderHistory = () => {
             message: 'Are you sure you want to cancel this order?',
             onConfirm: async () => {
                 try {
-                    const config = {
-                        headers: { Authorization: `Bearer ${user.token}` }
-                    };
-                    await axios.put(`http://localhost:5000/api/orders/${orderId}/cancel`, {}, config);
+                    await api.put(`/api/orders/${orderId}/cancel`, {});
                     showToast('Order cancelled successfully', 'success');
                     fetchOrders();
                 } catch (error) {

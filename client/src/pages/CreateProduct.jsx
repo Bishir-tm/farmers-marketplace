@@ -1,5 +1,5 @@
 import { useState, useContext } from 'react';
-import axios from 'axios';
+import api from '../config/api';
 import AuthContext from '../context/AuthContext';
 import { useUI } from '../context/UIContext';
 import { useNavigate } from 'react-router-dom';
@@ -19,13 +19,9 @@ const CreateProduct = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const config = {
-                headers: { Authorization: `Bearer ${user.token}` }
-            };
-
-            await axios.post('http://localhost:5000/api/products', {
+            await api.post('/api/products', {
                 title, description, price, category, location, image
-            }, config);
+            });
 
             showToast('Product listed successfully!', 'success');
             navigate('/dashboard');

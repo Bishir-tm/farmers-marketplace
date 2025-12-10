@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import axios from 'axios';
+import api from '../config/api';
 import AuthContext from '../context/AuthContext';
 import { useUI } from '../context/UIContext';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -24,7 +24,7 @@ const EditProduct = () => {
 
     const fetchProduct = async () => {
         try {
-            const { data } = await axios.get(`http://localhost:5000/api/products/${id}`);
+            const { data } = await api.get(`/api/products/${id}`);
             setTitle(data.title);
             setDescription(data.description);
             setPrice(data.price);
@@ -42,13 +42,9 @@ const EditProduct = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const config = {
-                headers: { Authorization: `Bearer ${user.token}` }
-            };
-
-            await axios.put(`http://localhost:5000/api/products/${id}`, {
+            await api.put(`/api/products/${id}`, {
                 title, description, price, category, location, image
-            }, config);
+            });
 
             showToast('Product updated successfully!', 'success');
             navigate('/dashboard');

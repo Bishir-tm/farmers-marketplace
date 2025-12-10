@@ -21,6 +21,7 @@ const registerUser = async (req, res) => {
                 email: user.email,
                 role: user.role,
                 phoneNumber: user.phoneNumber,
+                location: user.location,
                 token: generateToken(user.id)
             });
         }
@@ -43,6 +44,7 @@ const loginUser = async (req, res) => {
                 email: user.email,
                 role: user.role,
                 phoneNumber: user.phoneNumber,
+                location: user.location,
                 token: generateToken(user.id)
             });
         } else {

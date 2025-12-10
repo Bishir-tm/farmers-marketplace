@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import axios from 'axios';
+import api from '../config/api';
 import AuthContext from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { useUI } from '../context/UIContext';
@@ -16,14 +16,22 @@ const Home = () => {
 
     useEffect(() => {
         const fetchProducts = async () => {
-            const { data } = await axios.get(`http://localhost:5000/api/products?keyword=${keyword}`);
-            setProducts(data);
-            // Initialize quantities for all products
-            const initialQuantities = {};
-            data.forEach(product => {
-                initialQuantities[product._id] = 1;
-            });
-            setQuantities(initialQuantities);
+            try {
+                const { data } = await api.get(`/api/products?keyword=${keyword}`);
+                // Ensure data is an array
+                const productsArray = Array.isArray(data) ? data : [];
+                setProducts(productsArray);
+                // Initialize quantities for all products
+                const initialQuantities = {};
+                productsArray.forEach(product => {
+                    initialQuantities[product._id] = 1;
+                });
+                setQuantities(initialQuantities);
+            } catch (error) {
+                console.error('Failed to fetch products:', error);
+                showToast('Failed to load products. Please check your connection.', 'error');
+                setProducts([]);
+            }
         };
         fetchProducts();
     }, [keyword]);
@@ -56,9 +64,8 @@ const Home = () => {
                 <h1 className="text-2xl md:text-4xl font-bold">Fresh Farm Produce, Direct to You</h1>
                 <p className="text-base md:text-xl opacity-90">Skip the middleman. Buy fresh.</p>
                 <div className="max-w-xl mx-auto px-4 sm:px-0">
-                    <div className="flex items-stretch bg-white rounded-full p-2 shadow-inner gap-2">
+                    <div className="flex items-center bg-white rounded-full p-2 shadow-inner gap-2">
                         <div className="flex items-center flex-1 px-2">
-                            <FaSearch className="text-gray-400 mr-2 flex-shrink-0" />
                             <input 
                                 type="text" 
                                 placeholder="Search for yams, rice, tomatoes..." 
@@ -66,7 +73,9 @@ const Home = () => {
                                 onChange={(e) => setKeyword(e.target.value)}
                             />
                         </div>
-                        <button className="bg-green-700 text-white px-4 md:px-6 py-2 rounded-full hover:bg-green-800 transition font-medium whitespace-nowrap text-sm md:text-base">Search</button>
+                        <button className="bg-green-700 text-white px-4 md:px-6 py-2 rounded-full hover:bg-green-800 transition font-medium whitespace-nowrap text-sm md:text-base flex-shrink-0">
+                            <FaSearch className="text-gray-400 mr-2" />
+                        </button>
                     </div>
                 </div>
             </div>
