@@ -1,5 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
+import BottomNavigation from './components/BottomNavigation';
+import GlobalLoader from './components/GlobalLoader';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -22,9 +24,11 @@ function App() {
       <AuthProvider>
         <CartProvider>
           <UIProvider>
-          <div className="min-h-screen bg-gray-50 text-gray-900 font-sans">
+          <div className="min-h-screen bg-gray-50 pt-8 text-gray-900 font-sans">
+            <GlobalLoader />
             <Navbar />
-            <div className="container mx-auto px-4 py-8">
+            <BottomNavigation />
+            <div className="container mx-auto px-4 py-8 pb-24 md:pb-8">
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/login" element={<Login />} />

@@ -1,4 +1,7 @@
 import axios from 'axios';
+import { loadingService } from '../utils/loadingService';
+
+const { setIsLoading } = loadingService;
 
 // Get API URL from environment variable
 const API_URL = import.meta.env.VITE_API_URL;
@@ -11,9 +14,10 @@ const api = axios.create({
     baseURL: API_URL,
 });
 
-// Add request interceptor to include auth token
+// Add request interceptor to include auth token and start loading
 api.interceptors.request.use(
     (config) => {
+        setIsLoading(true);
         const userInfo = JSON.parse(localStorage.getItem('userInfo'));
         if (userInfo && userInfo.token) {
             config.headers.Authorization = `Bearer ${userInfo.token}`;
@@ -21,6 +25,19 @@ api.interceptors.request.use(
         return config;
     },
     (error) => {
+        setIsLoading(false);
+        return Promise.reject(error);
+    }
+);
+
+// Add response interceptor to stop loading
+api.interceptors.response.use(
+    (response) => {
+        setIsLoading(false);
+        return response;
+    },
+    (error) => {
+        setIsLoading(false);
         return Promise.reject(error);
     }
 );

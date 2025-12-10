@@ -61,8 +61,8 @@ const Home = () => {
         <div className="space-y-8">
             {/* Hero Section */}
             <div className="bg-green-600 text-white p-6 md:p-10 rounded-3xl shadow-xl text-center space-y-4">
-                <h1 className="text-2xl md:text-4xl font-bold">Fresh Farm Produce, Direct to You</h1>
-                <p className="text-base md:text-xl opacity-90">Skip the middleman. Buy fresh.</p>
+                <h1 className="text-2xl md:text-4xl font-bold">Farmer's Marketplace</h1>
+                <p className="text-base md:text-xl opacity-90">Skip the middleman. Buy fresh from Farmers.</p>
                 <div className="max-w-xl mx-auto px-4 sm:px-0">
                     <div className="flex items-center bg-white rounded-full p-2 shadow-inner gap-2">
                         <div className="flex items-center flex-1 px-2">
