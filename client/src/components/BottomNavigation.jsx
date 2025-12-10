@@ -9,6 +9,7 @@ import {
     FaLeaf, 
     FaClipboardList, 
     FaSignInAlt,
+    FaUserPlus,
     FaTachometerAlt
 } from 'react-icons/fa';
 
@@ -80,10 +81,16 @@ const BottomNavigation = () => {
                 </>
             ) : (
                 /* Guest */
-                <NavLink to="/login" className={getLinkClass}>
-                    <FaSignInAlt className="text-xl mb-1" />
-                    <span>Login</span>
-                </NavLink>
+                <>
+                    <NavLink to="/login" className={getLinkClass}>
+                        <FaSignInAlt className="text-xl mb-1" />
+                        <span>Login</span>
+                    </NavLink>
+                    <NavLink to="/register" className={getLinkClass}>
+                        <FaUserPlus className="text-xl mb-1" />
+                        <span>Sign Up</span>
+                    </NavLink>
+                </>
             )}
         </div>
     );
