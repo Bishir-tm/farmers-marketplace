@@ -42,30 +42,30 @@ const FarmerDashboard = () => {
 
     return (
         <div className="space-y-6">
-            <div className="flex justify-between items-center bg-green-50 p-6 rounded-3xl shadow-sm">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-green-50 p-4 md:p-6 rounded-3xl shadow-sm gap-4">
                 <div>
-                    <h2 className="text-3xl font-bold text-gray-800">My Dashboard</h2>
-                    <p className="text-gray-600">Manage your farm listings and orders.</p>
+                    <h2 className="text-2xl md:text-3xl font-bold text-gray-800">My Dashboard</h2>
+                    <p className="text-gray-600 text-sm md:text-base">Manage your farm listings and orders.</p>
                 </div>
-                <Link to="/create-product" className="bg-green-600 text-white px-6 py-3 rounded-full hover:bg-green-700 transition flex items-center gap-2 font-bold shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                <Link to="/create-product" className="bg-green-600 text-white px-4 md:px-6 py-2 md:py-3 rounded-full hover:bg-green-700 transition flex items-center gap-2 font-bold shadow-lg hover:shadow-xl transform hover:-translate-y-1 text-sm md:text-base w-full sm:w-auto justify-center">
                     <FaPlus /> Add Produce
                 </Link>
             </div>
 
             <h3 className="text-xl font-bold text-gray-700 px-2">Your Listings</h3>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {products.map(product => (
-                    <div key={product._id} className="bg-white p-6 rounded-3xl shadow-md border border-gray-100 flex justify-between items-center transition hover:shadow-lg">
-                        <div className="flex gap-4 items-center">
-                            <img src={product.image || 'https://placehold.co/100'} alt={product.title} className="w-20 h-20 rounded-2xl object-cover shadow-sm" />
-                            <div>
-                                <h4 className="text-lg font-bold text-gray-800">{product.title}</h4>
+                    <div key={product._id} className="bg-white p-4 md:p-6 rounded-3xl shadow-md border border-gray-100 flex flex-col sm:flex-row justify-between items-start sm:items-center transition hover:shadow-lg gap-4">
+                        <div className="flex gap-4 items-center w-full sm:w-auto">
+                            <img src={product.image || 'https://placehold.co/100'} alt={product.title} className="w-16 h-16 md:w-20 md:h-20 rounded-2xl object-cover shadow-sm" />
+                            <div className="flex-1">
+                                <h4 className="text-base md:text-lg font-bold text-gray-800">{product.title}</h4>
                                 <p className="text-green-600 font-semibold">₦{product.price}</p>
                                 <span className="text-xs text-gray-400">{new Date(product.createdAt).toLocaleDateString()}</span>
                             </div>
                         </div>
-                        <div className="flex gap-2">
+                        <div className="flex gap-2 w-full sm:w-auto justify-end">
                            {/* Edit placeholder - future feature */}
                             <button className="text-blue-500 hover:text-blue-700 p-3 rounded-full hover:bg-blue-50 transition" title="Edit">
                                 <FaEdit />

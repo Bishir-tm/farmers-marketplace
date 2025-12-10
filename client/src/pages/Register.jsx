@@ -8,6 +8,7 @@ const Register = () => {
     const [password, setPassword] = useState('');
     const [role, setRole] = useState('buyer'); // Default role
     const [location, setLocation] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('');
     const { register } = useContext(AuthContext);
     const navigate = useNavigate();
     const [error, setError] = useState(null);
@@ -17,7 +18,7 @@ const Register = () => {
         e.preventDefault();
         setLoading(true);
         try {
-            await register(name, email, password, role, location);
+            await register(name, email, password, role, location, phoneNumber);
             navigate('/');
         } catch (err) {
             setError(err.response?.data?.message || 'Registration failed');
@@ -38,6 +39,10 @@ const Register = () => {
                 <div>
                     <label className="block text-sm font-medium text-gray-700">Email Address</label>
                     <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full mt-1 p-2 border rounded-lg focus:ring-green-500 focus:border-green-500" required />
+                </div>
+                <div>
+                    <label className="block text-sm font-medium text-gray-700">Phone Number</label>
+                    <input type="tel" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} className="w-full mt-1 p-2 border rounded-lg focus:ring-green-500 focus:border-green-500" placeholder="e.g., +234 800 000 0000" required />
                 </div>
                 <div>
                     <label className="block text-sm font-medium text-gray-700">Password</label>

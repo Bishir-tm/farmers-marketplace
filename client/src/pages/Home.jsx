@@ -56,18 +56,22 @@ const Home = () => {
     return (
         <div className="space-y-8">
             {/* Hero Section */}
-            <div className="bg-green-600 text-white p-10 rounded-3xl shadow-xl text-center space-y-4">
-                <h1 className="text-4xl font-bold">Fresh Farm Produce, Direct to You</h1>
-                <p className="text-xl opacity-90">Skip the middleman. Buy fresh.</p>
-                <div className="max-w-xl mx-auto flex items-center bg-white rounded-full p-2 shadow-inner mt-6">
-                    <FaSearch className="text-gray-400 ml-4" />
-                    <input 
-                        type="text" 
-                        placeholder="Search for yams, rice, tomatoes..." 
-                        className="flex-1 p-3 outline-none text-gray-700 rounded-full"
-                        onChange={(e) => setKeyword(e.target.value)}
-                    />
-                    <button className="bg-green-700 text-white px-6 py-2 rounded-full hover:bg-green-800 transition font-medium">Search</button>
+            <div className="bg-green-600 text-white p-6 md:p-10 rounded-3xl shadow-xl text-center space-y-4">
+                <h1 className="text-2xl md:text-4xl font-bold">Fresh Farm Produce, Direct to You</h1>
+                <p className="text-base md:text-xl opacity-90">Skip the middleman. Buy fresh.</p>
+                <div className="max-w-xl mx-auto">
+                    <div className="flex items-stretch bg-white rounded-full p-2 shadow-inner gap-2">
+                        <div className="flex items-center flex-1 px-2">
+                            <FaSearch className="text-gray-400 mr-2" />
+                            <input 
+                                type="text" 
+                                placeholder="Search for yams, rice, tomatoes..." 
+                                className="flex-1 p-2 outline-none text-gray-700 bg-transparent"
+                                onChange={(e) => setKeyword(e.target.value)}
+                            />
+                        </div>
+                        <button className="bg-green-700 text-white px-6 py-2 rounded-full hover:bg-green-800 transition font-medium whitespace-nowrap">Search</button>
+                    </div>
                 </div>
             </div>
 
@@ -76,16 +80,16 @@ const Home = () => {
                 {products.map(product => (
                     <div key={product._id} className="bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100">
                         <img src={product.image || 'https://placehold.co/600x400?text=No+Image'} alt={product.title} className="w-full h-56 object-cover" />
-                        <div className="p-6">
-                            <div className="flex justify-between items-start mb-2">
+                        <div className="p-4 md:p-6">
+                            <div className="flex flex-col sm:flex-row justify-between items-start mb-2 gap-2">
                                 <div>
-                                    <h3 className="text-xl font-bold text-gray-800">{product.title}</h3>
+                                    <h3 className="text-lg md:text-xl font-bold text-gray-800">{product.title}</h3>
                                     <span className="bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full font-bold uppercase tracking-wide">{product.category}</span>
                                 </div>
                                 <span className="text-lg font-bold text-green-600">₦{product.price}</span>
                             </div>
                             <p className="text-gray-600 text-sm mb-4 line-clamp-2">{product.description}</p>
-                            <div className="flex justify-between items-center text-sm text-gray-500 mb-6">
+                            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center text-sm text-gray-500 mb-6 gap-1">
                                 <span>📍 {product.location}</span>
                                 <span>👨‍🌾 {product.farmer?.name}</span>
                             </div>

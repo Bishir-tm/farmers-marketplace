@@ -43,7 +43,7 @@ const CreateProduct = () => {
                     <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} className="w-full p-3 bg-gray-50 border-gray-200 rounded-2xl focus:ring-green-500 focus:border-green-500 transition" required />
                 </div>
                 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1 ml-1">Price (₦)</label>
                         <input type="number" value={price} onChange={(e) => setPrice(e.target.value)} className="w-full p-3 bg-gray-50 border-gray-200 rounded-2xl focus:ring-green-500 focus:border-green-500 transition" required />
