@@ -1,56 +1,52 @@
 import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import AuthContext from '../context/AuthContext';
+import { useCart } from '../context/CartContext';
 import { useUI } from '../context/UIContext';
-import { FaSearch, FaShoppingBasket } from 'react-icons/fa';
+import { FaSearch, FaShoppingCart } from 'react-icons/fa';
+import QuantitySelector from '../components/QuantitySelector';
 
 const Home = () => {
     const [products, setProducts] = useState([]);
     const [keyword, setKeyword] = useState('');
+    const [quantities, setQuantities] = useState({});
     const { user } = useContext(AuthContext);
-    const { showToast, showDialog } = useUI();
+    const { addToCart } = useCart();
+    const { showToast } = useUI();
 
     useEffect(() => {
         const fetchProducts = async () => {
             const { data } = await axios.get(`http://localhost:5000/api/products?keyword=${keyword}`);
             setProducts(data);
+            // Initialize quantities for all products
+            const initialQuantities = {};
+            data.forEach(product => {
+                initialQuantities[product._id] = 1;
+            });
+            setQuantities(initialQuantities);
         };
         fetchProducts();
     }, [keyword]);
 
-    const handleBuy = (product) => {
+    const handleAddToCart = (product) => {
         if (!user) {
-            showToast('Please login to purchase items', 'info');
+            showToast('Please login to add items to cart', 'info');
             return;
         }
         if (user.role === 'farmer') {
-            showToast('Farmers cannot make purchases with this account', 'error');
+            showToast('Farmers cannot add items to cart', 'error');
             return;
         }
 
-        showDialog({
-            title: 'Confirm Purchase',
-            message: `Do you want to buy ${product.title} for ₦${product.price}?`,
-            onConfirm: async () => {
-                try {
-                    const orderData = {
-                        orderItems: [{ product: product._id, qty: 1 }],
-                        totalAmount: product.price
-                    };
-                    
-                    const config = {
-                        headers: {
-                            Authorization: `Bearer ${user.token}`
-                        }
-                    };
+        const quantity = quantities[product._id] || 1;
+        addToCart(product, quantity);
+        showToast(`Added ${quantity} ${product.title} to cart!`, 'success');
+        // Reset quantity to 1
+        setQuantities(prev => ({ ...prev, [product._id]: 1 }));
+    };
 
-                    await axios.post('http://localhost:5000/api/orders', orderData, config);
-                    showToast(`Order placed for ${product.title}!`, 'success');
-                } catch (error) {
-                    showToast(error.response?.data?.message || 'Order failed', 'error');
-                }
-            }
-        });
+    const updateQuantity = (productId, newQuantity) => {
+        setQuantities(prev => ({ ...prev, [productId]: newQuantity }));
     };
 
     return (
@@ -79,7 +75,7 @@ const Home = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {products.map(product => (
                     <div key={product._id} className="bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100">
-                        <img src={product.image || 'https://placehold.co/600x400?text=No+Image'} alt={product.title} className="w-full h-56 object-cover" />
+                        <img src={product.image || '/default-product.png'} alt={product.title} className="w-full h-56 object-cover" />
                         <div className="p-4 md:p-6">
                             <div className="flex flex-col sm:flex-row justify-between items-start mb-2 gap-2">
                                 <div>
@@ -93,11 +89,18 @@ const Home = () => {
                                 <span>📍 {product.location}</span>
                                 <span>👨‍🌾 {product.farmer?.name}</span>
                             </div>
+                            <div className="mb-4">
+                                <QuantitySelector 
+                                    value={quantities[product._id] || 1}
+                                    onChange={(qty) => updateQuantity(product._id, qty)}
+                                    size="sm"
+                                />
+                            </div>
                             <button 
-                                onClick={() => handleBuy(product)}
+                                onClick={() => handleAddToCart(product)}
                                 className="w-full bg-green-600 text-white py-3 rounded-full hover:bg-green-700 transition flex items-center justify-center gap-2 font-semibold shadow-md active:scale-95 transform duration-100"
                             >
-                                <FaShoppingBasket /> Buy Now
+                                <FaShoppingCart /> Add to Cart
                             </button>
                         </div>
                     </div>

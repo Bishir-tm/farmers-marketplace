@@ -53,4 +53,43 @@ const loginUser = async (req, res) => {
     }
 };
 
-module.exports = { registerUser, loginUser };
+const updateProfile = async (req, res) => {
+    try {
+        const { name, email, phoneNumber, location } = req.body;
+        
+        const user = await User.findById(req.user.id);
+        
+        if (user) {
+            // Check if email is being changed and if it's already taken
+            if (email && email !== user.email) {
+                const emailExists = await User.findOne({ email });
+                if (emailExists) {
+                    return res.status(400).json({ message: 'Email already in use' });
+                }
+            }
+            
+            user.name = name || user.name;
+            user.email = email || user.email;
+            user.phoneNumber = phoneNumber || user.phoneNumber;
+            user.location = location || user.location;
+            
+            const updatedUser = await user.save();
+            
+            res.json({
+                _id: updatedUser.id,
+                name: updatedUser.name,
+                email: updatedUser.email,
+                role: updatedUser.role,
+                phoneNumber: updatedUser.phoneNumber,
+                location: updatedUser.location,
+                token: generateToken(updatedUser.id)
+            });
+        } else {
+            res.status(404).json({ message: 'User not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+module.exports = { registerUser, loginUser, updateProfile };

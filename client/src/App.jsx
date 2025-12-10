@@ -5,38 +5,78 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import FarmerDashboard from './pages/FarmerDashboard';
 import CreateProduct from './pages/CreateProduct';
+import EditProduct from './pages/EditProduct';
+import Cart from './pages/Cart';
+import Checkout from './pages/Checkout';
+import OrderHistory from './pages/OrderHistory';
+import FarmerOrders from './pages/FarmerOrders';
+import Profile from './pages/Profile';
 import ProtectedRoute from './components/ProtectedRoute';
 import { UIProvider } from './context/UIContext';
 import { AuthProvider } from './context/AuthContext';
+import { CartProvider } from './context/CartContext';
 
 function App() {
   return (
     <Router>
       <AuthProvider>
-        <UIProvider>
-        <div className="min-h-screen bg-gray-50 text-gray-900 font-sans">
-          <Navbar />
-          <div className="container mx-auto px-4 py-8">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              
-              <Route path="/dashboard" element={
-                <ProtectedRoute role="farmer">
-                  <FarmerDashboard />
-                </ProtectedRoute>
-              } />
-              
-              <Route path="/create-product" element={
-                <ProtectedRoute role="farmer">
-                  <CreateProduct />
-                </ProtectedRoute>
-              } />
-            </Routes>
+        <CartProvider>
+          <UIProvider>
+          <div className="min-h-screen bg-gray-50 text-gray-900 font-sans">
+            <Navbar />
+            <div className="container mx-auto px-4 py-8">
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/cart" element={<Cart />} />
+                
+                <Route path="/checkout" element={
+                  <ProtectedRoute>
+                    <Checkout />
+                  </ProtectedRoute>
+                } />
+                
+                <Route path="/orders" element={
+                  <ProtectedRoute>
+                    <OrderHistory />
+                  </ProtectedRoute>
+                } />
+                
+                <Route path="/farmer/orders" element={
+                  <ProtectedRoute role="farmer">
+                    <FarmerOrders />
+                  </ProtectedRoute>
+                } />
+                
+                <Route path="/dashboard" element={
+                  <ProtectedRoute role="farmer">
+                    <FarmerDashboard />
+                  </ProtectedRoute>
+                } />
+                
+                <Route path="/create-product" element={
+                  <ProtectedRoute role="farmer">
+                    <CreateProduct />
+                  </ProtectedRoute>
+                } />
+                
+                <Route path="/edit-product/:id" element={
+                  <ProtectedRoute role="farmer">
+                    <EditProduct />
+                  </ProtectedRoute>
+                } />
+                
+                <Route path="/profile" element={
+                  <ProtectedRoute>
+                    <Profile />
+                  </ProtectedRoute>
+                } />
+              </Routes>
+            </div>
           </div>
-        </div>
-        </UIProvider>
+          </UIProvider>
+        </CartProvider>
       </AuthProvider>
     </Router>
   );

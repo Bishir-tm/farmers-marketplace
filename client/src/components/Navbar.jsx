@@ -1,10 +1,12 @@
 import { useContext } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
-import { FaLeaf, FaArrowLeft } from 'react-icons/fa';
+import { useCart } from '../context/CartContext';
+import { FaLeaf, FaArrowLeft, FaShoppingCart } from 'react-icons/fa';
 
 const Navbar = () => {
     const { user, logout } = useContext(AuthContext);
+    const { getCartCount } = useCart();
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -30,9 +32,25 @@ const Navbar = () => {
                     <Link to="/" className="text-gray-600 hover:text-green-600 font-medium text-sm md:text-base hidden sm:inline">Marketplace</Link>
                     {user ? (
                         <>
-                            {user.role === 'farmer' && (
-                                <Link to="/dashboard" className="text-gray-600 hover:text-green-600 font-medium text-sm md:text-base hidden md:inline">My Dashboard</Link>
+                            {user.role === 'farmer' ? (
+                                <Link to="/farmer/orders" className="text-gray-600 hover:text-green-600 font-medium text-sm md:text-base hidden md:inline">Orders</Link>
+                            ) : (
+                                <>
+                                    <Link to="/orders" className="text-gray-600 hover:text-green-600 font-medium text-sm md:text-base hidden md:inline">My Orders</Link>
+                                    <Link to="/cart" className="relative text-gray-600 hover:text-green-600 p-2">
+                                        <FaShoppingCart className="text-xl" />
+                                        {getCartCount() > 0 && (
+                                            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+                                                {getCartCount()}
+                                            </span>
+                                        )}
+                                    </Link>
+                                </>
                             )}
+                            {user.role === 'farmer' && (
+                                <Link to="/dashboard" className="text-gray-600 hover:text-green-600 font-medium text-sm md:text-base md:hidden">Dashboard</Link>
+                            )}
+                            <Link to="/profile" className="text-gray-600 hover:text-green-600 font-medium text-sm md:text-base hidden lg:inline">Profile</Link>
                             <span className="text-gray-500 hidden lg:inline text-sm">Hi, {user.name}</span>
                             <button onClick={handleLogout} className="bg-red-500 hover:bg-red-600 text-white px-3 md:px-5 py-2 rounded-full transition font-medium text-sm md:text-base">Logout</button>
                         </>
