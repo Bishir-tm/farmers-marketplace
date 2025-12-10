@@ -11,6 +11,7 @@ const CreateProduct = () => {
     const [category, setCategory] = useState('Vegetables');
     const [location, setLocation] = useState('');
     const [image, setImage] = useState('');
+    const [loading, setLoading] = useState(false);
     
     const { user } = useContext(AuthContext);
     const { showToast } = useUI();
@@ -18,6 +19,11 @@ const CreateProduct = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        
+        // Prevent double submission
+        if (loading) return;
+        
+        setLoading(true);
         try {
             await api.post('/api/products', {
                 title, description, price, category, location, image
@@ -27,6 +33,8 @@ const CreateProduct = () => {
             navigate('/dashboard');
         } catch (error) {
             showToast(error.response?.data?.message || 'Failed to create product', 'error');
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -114,8 +122,8 @@ const CreateProduct = () => {
                     <textarea value={description} onChange={(e) => setDescription(e.target.value)} className="w-full p-3 bg-gray-50 border-gray-200 rounded-2xl focus:ring-green-500 focus:border-green-500 transition h-32" required></textarea>
                 </div>
 
-                <button type="submit" className="w-full bg-green-600 text-white py-3 rounded-full hover:bg-green-700 transition font-bold shadow-lg text-lg">
-                    List Product
+                <button type="submit" disabled={loading} className="w-full bg-green-600 text-white py-3 rounded-full hover:bg-green-700 transition font-bold shadow-lg text-lg disabled:opacity-50 disabled:cursor-not-allowed">
+                    {loading ? 'Listing Product...' : 'List Product'}
                 </button>
             </form>
         </div>

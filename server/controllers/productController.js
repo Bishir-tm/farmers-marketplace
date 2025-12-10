@@ -26,13 +26,29 @@ const createProduct = async (req, res) => {
     const { title, description, price, category, location, image } = req.body;
 
     try {
+        console.log('Creating product:', { title, farmer: req.user.id, timestamp: new Date().toISOString() });
+        
+        // Check for recent duplicate (same title from same farmer within last 5 seconds)
+        const recentDuplicate = await Product.findOne({
+            farmer: req.user.id,
+            title: title,
+            createdAt: { $gte: new Date(Date.now() - 5000) } // Within last 5 seconds
+        });
+        
+        if (recentDuplicate) {
+            console.log('Duplicate product detected, returning existing:', recentDuplicate._id);
+            return res.status(201).json(recentDuplicate);
+        }
+        
         const product = new Product({
             farmer: req.user.id,
             title, description, price, category, location, image
         });
         const createdProduct = await product.save();
+        console.log('Product created successfully:', createdProduct._id);
         res.status(201).json(createdProduct);
     } catch (error) {
+        console.error('Error creating product:', error);
         res.status(500).json({ message: error.message });
     }
 };
